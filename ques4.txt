@@ -1,0 +1,34 @@
+#!/usr/bin/sh
+remote_repo="https://github.com/shrutisaumya/Myproject"
+dest_path="/home/testuser/mycode"
+echo $remote_repo
+echo $dest_path
+cmnd1=`git clone \$remote_repo \$dest_path`
+if[ ! -f /home/testuser/mycode ]
+then
+echo "Checking out code: $cmnd1"
+else
+echo "Files already present"
+fi
+cmnd2=`chown -R testuser /home/testuser/mycode`
+echo "Changing ownership: $cmnd2"
+cmnd3=`tar -zcvf mycode.tar.gz \$dest_path`
+echo "Archiving the folder: $cmnd3"
+cmnd4=`cksum mycode.tar.gz`
+echo "The checksum value is: $cmnd4"
+cmnd5=`scp mycode.tar.gz testuser@remote.test.com:/home/testuser/remotecode`
+echo "SCP to another host: $cmnd5"
+cmnd6=`/etc/init.d/node stop`
+echo "Stopping the node service: $cmnd6"
+cmnd7=`mv mycode.tar.gz /user/node/data`
+echo "Moving the archive: $cmnd7"
+cmnd8=`tar -zxvf /user/node/data/mycode.tar.gz -C /user/node/data`
+echo "Extracting the archive: $cmnd8"
+cmnd9=`/etc/init.d/node start`
+echo "Stopping the node service: $cmnd9"
+cmnd10=`curl -o /dev/null --silent --head --write-out '%{http_code}\n' http://remote.test.com/status`
+if [ $cmnd10 == 200 ]
+echo "Return code is 200"
+else
+echo "not 200"
+fi
